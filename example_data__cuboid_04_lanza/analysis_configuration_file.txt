@@ -1,0 +1,30 @@
+# sample name
+cuboid_04_lanza
+# accuracy of MCMC (low/medium/high)
+low
+# threshold on Bayes Factor for signal detection
+0.33
+# CL for activity limit
+0.95
+# fractional uncertainty of efficiencies
+0.02
+# isotope parameters folder
+/home/daniel/Desktop/arbeitsstuff/20200624__gemse/studies/20210105__local_gemse_analysis_framework/gemse_analysis_files/isotope_parameters/
+# sample spectrum file name
+/media/daniel/2_intenso_256gb_stick/gemse_measurements/2020-12-10_cuboid_04_lanza/final_calibrated_added_spectrum.root
+# background spectrum file name
+/home/daniel/Desktop/arbeitsstuff/20200624__gemse/studies/20210105__local_gemse_analysis_framework/gemse_analysis_files/background_combined.root
+# efficiency file name
+/home/daniel/Desktop/arbeitsstuff/20200624__gemse/studies/20210105__local_gemse_analysis_framework/gemse_analysis_files/simulation/simulated_efficiencies.root
+# resolution file name
+/home/daniel/Desktop/arbeitsstuff/20200624__gemse/studies/20210105__local_gemse_analysis_framework/gemse_analysis_files/komar_gaon_ch00_full.dat.root_spectrum_calibrated_0-1188660s.root_resolution_function.root
+# results folder
+/media/daniel/2_intenso_256gb_stick/gemse_measurements/2020-12-10_cuboid_04_lanza/
+# isotopes to analyze
+U238
+Ra226
+Th228
+Ra228
+Co60
+K40
+Cs137

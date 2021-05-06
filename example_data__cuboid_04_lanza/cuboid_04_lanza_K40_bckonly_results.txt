@@ -1,0 +1,98 @@
+
+ -----------------------------------------------------
+ Summary
+ -----------------------------------------------------
+
+ Model summary
+ =============
+ Model: Multi-template Fitter
+ Number of parameters: 3
+ List of Parameters and ranges:
+  (0) Parameter "sample_const_peak0": [0, 72]
+  (1) Parameter "bck_const_peak0": [0, 26.4]
+  (2) Parameter "bck_gauss_peak0": [6, 48]
+
+ Results of the optimization
+ ===========================
+ Optimization algorithm used: Minuit
+ Log of the maximum posterior: 2.90359e+07
+ List of parameters and global mode:
+  (0) Parameter "sample_const_peak0": 22.9567 +- 7.4246
+  (1) Parameter "bck_const_peak0": 6.05175 +- 3.21964
+  (2) Parameter "bck_gauss_peak0": 24.906 +- 5.31095
+
+ Results of the integration
+ ============================
+ Integration method used: Sample Mean Monte Carlo
+ Evidence: 4.94525e+10 +- 4.935e+08
+
+ Results of the marginalization
+ ==============================
+ Marginalization algorithm used: Metropolis
+ List of parameters and properties of the marginalized
+ distributions:
+  (0) Parameter "sample_const_peak0":
+      Mean +- sqrt(V):                23.22 +- 7.477
+      Median +- central 68% interval: 22.55 +  8.246 - 6.922
+      (Marginalized) mode:            21.24
+       5% quantile:                   12.22
+      10% quantile:                   14.14
+      16% quantile:                   15.62
+      84% quantile:                   31.22
+      90% quantile:                   32.97
+      95% quantile:                   36.17
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (13.68, 15.12) (local mode at 13.68 with rel. height 0.581; rel. area 0.0269)
+       (15.12, 17.28) (local mode at 15.12 with rel. height 0.7948; rel. area 0.0638)
+       (17.28, 30.96) (local mode at 21.24 with rel. height 1; rel. area 0.6088)
+
+  (1) Parameter "bck_const_peak0":
+      Mean +- sqrt(V):                7.595 +- 3.386
+      Median +- central 68% interval: 7.157 +  3.788 - 2.906
+      (Marginalized) mode:            6.732
+       5% quantile:                   2.841
+      10% quantile:                   3.626
+      16% quantile:                   4.251
+      84% quantile:                   11.08
+      90% quantile:                   12.26
+      95% quantile:                   13.84
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (3.432, 8.712) (local mode at 6.732 with rel. height 1; rel. area 0.5699)
+       (8.712, 10.3) (local mode at 9.108 with rel. height 0.8464; rel. area 0.1236)
+
+  (2) Parameter "bck_gauss_peak0":
+      Mean +- sqrt(V):                25.5 +- 5.295
+      Median +- central 68% interval: 25.28 +  5.424 - 4.976
+      (Marginalized) mode:            24.27
+       5% quantile:                   17.15
+      10% quantile:                   19.04
+      16% quantile:                   20.3
+      84% quantile:                   30.99
+      90% quantile:                   32.31
+      95% quantile:                   34.87
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (19.02, 19.86) (local mode at 19.02 with rel. height 0.5098; rel. area 0.0209)
+       (19.86, 28.26) (local mode at 24.27 with rel. height 1; rel. area 0.5487)
+       (28.26, 30.36) (local mode at 28.26 with rel. height 0.8293; rel. area 0.1065)
+       (31.2, 32.04) (local mode at 31.2 with rel. height 0.4805; rel. area 0.0197)
+
+ Status of the MCMC
+ ==================
+ Convergence reached:                    yes
+ Number of iterations until convergence: 4294967295
+ Number of chains:                       1
+ Number of iterations per chain:         10000
+ Average pre-run efficiencies:
+  (0) Parameter "sample_const_peak0": 16.67%
+  (1) Parameter "bck_const_peak0": 23.43%
+  (2) Parameter "bck_gauss_peak0": 20.07%
+
+ -----------------------------------------------------
+ Notation:
+ Mean        : mean value of the marg. pdf
+ Median      : median of the marg. pdf
+ Marg. mode  : most probable value of the marg. pdf
+ V           : Variance of the marg. pdf
+ Quantiles   : most commonly used quantiles
+ -----------------------------------------------------
+

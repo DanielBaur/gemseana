@@ -1,0 +1,101 @@
+
+ -----------------------------------------------------
+ Summary
+ -----------------------------------------------------
+
+ Model summary
+ =============
+ Model: Multi-template Fitter
+ Number of parameters: 3
+ List of Parameters and ranges:
+  (0) Parameter "sample_const_peak0": [0, 16]
+  (1) Parameter "bck_const_peak0": [0, 15.9]
+  (2) Parameter "bck_gauss_peak0": [0, 9]
+
+ Results of the optimization
+ ===========================
+ Optimization algorithm used: Minuit
+ Log of the maximum posterior: 4.29651e+61
+ List of parameters and global mode:
+  (0) Parameter "sample_const_peak0": 3.70344 +- 2.5931
+  (1) Parameter "bck_const_peak0": 2.93234 +- 1.96589
+  (2) Parameter "bck_gauss_peak0": 0.215393 +- 6.30502
+
+ Results of the integration
+ ============================
+ Integration method used: Sample Mean Monte Carlo
+ Evidence: 2.04167e+63 +- 2.03634e+61
+
+ Results of the marginalization
+ ==============================
+ Marginalization algorithm used: Metropolis
+ List of parameters and properties of the marginalized
+ distributions:
+  (0) Parameter "sample_const_peak0":
+      Mean +- sqrt(V):                4.027 +- 2.197
+      Median +- central 68% interval: 3.736 +  2.387 - 1.814
+      (Marginalized) mode:            2.32
+       5% quantile:                   1.006
+      10% quantile:                   1.423
+      16% quantile:                   1.921
+      84% quantile:                   6.276
+      90% quantile:                   6.982
+      95% quantile:                   8.073
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (0.96, 1.28) (local mode at 0.96 with rel. height 0.5735; rel. area 0.0238)
+       (1.28, 1.6) (local mode at 1.28 with rel. height 0.4867; rel. area 0.0202)
+       (1.6, 5.12) (local mode at 2.32 with rel. height 1; rel. area 0.5891)
+       (5.12, 5.44) (local mode at 5.12 with rel. height 0.6361; rel. area 0.0264)
+       (5.44, 5.76) (local mode at 5.44 with rel. height 0.5518; rel. area 0.0229)
+
+  (1) Parameter "bck_const_peak0":
+      Mean +- sqrt(V):                3.528 +- 2.011
+      Median +- central 68% interval: 3.186 +  2.184 - 1.53
+      (Marginalized) mode:            3.736
+       5% quantile:                   0.9068
+      10% quantile:                   1.311
+      16% quantile:                   1.656
+      84% quantile:                   5.493
+      90% quantile:                   6.357
+      95% quantile:                   7.398
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (1.113, 4.452) (local mode at 3.736 with rel. height 1; rel. area 0.6526)
+       (4.452, 4.77) (local mode at 4.452 with rel. height 0.4735; rel. area 0.0232)
+       (5.088, 5.406) (local mode at 5.088 with rel. height 0.4; rel. area 0.0196)
+
+  (2) Parameter "bck_gauss_peak0":
+      Mean +- sqrt(V):                1.331 +- 1.109
+      Median +- central 68% interval: 1.057 +  1.296 - 0.748
+      (Marginalized) mode:            0.045
+       5% quantile:                   0.08738
+      10% quantile:                   0.1789
+      16% quantile:                   0.3094
+      84% quantile:                   2.412
+      90% quantile:                   2.865
+      95% quantile:                   3.531
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (0, 1.44) (local mode at 0 with rel. height 1; rel. area 0.6086)
+       (1.44, 1.62) (local mode at 1.44 with rel. height 0.5515; rel. area 0.0284)
+       (1.71, 1.89) (local mode at 1.71 with rel. height 0.5495; rel. area 0.0283)
+       (1.89, 2.07) (local mode at 1.89 with rel. height 0.6447; rel. area 0.0332)
+
+ Status of the MCMC
+ ==================
+ Convergence reached:                    yes
+ Number of iterations until convergence: 4294967295
+ Number of chains:                       1
+ Number of iterations per chain:         10000
+ Average pre-run efficiencies:
+  (0) Parameter "sample_const_peak0": 23.1%
+  (1) Parameter "bck_const_peak0": 20.87%
+  (2) Parameter "bck_gauss_peak0": 16.43%
+
+ -----------------------------------------------------
+ Notation:
+ Mean        : mean value of the marg. pdf
+ Median      : median of the marg. pdf
+ Marg. mode  : most probable value of the marg. pdf
+ V           : Variance of the marg. pdf
+ Quantiles   : most commonly used quantiles
+ -----------------------------------------------------
+

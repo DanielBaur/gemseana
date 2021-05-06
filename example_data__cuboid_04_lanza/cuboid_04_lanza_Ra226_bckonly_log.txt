@@ -1,0 +1,2 @@
+Summary : Opening logfile /media/daniel/2_intenso_256gb_stick/gemse_measurements/2020-12-10_cuboid_04_lanza//cuboid_04_lanza_Ra226_bckonly_log.txt
+Warning : BCIntegrate::Integrate: Did not converge within maximum number of iterations

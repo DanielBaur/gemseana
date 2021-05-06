@@ -1,0 +1,2 @@
+Summary : Opening logfile /home/daniel/Desktop/arbeitsstuff/20200624__gemse/studies/20210114__ptfesc_gemse/cuboid_04_lanza/20201210__cuboid_04_lanza//cuboid_04_lanza_Al26_log.txt
+Warning : BCIntegrate::Integrate: Did not converge within maximum number of iterations
