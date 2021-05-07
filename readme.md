@@ -7,19 +7,22 @@
 <br>
 <br>
 
-This repository is meant to provide documentation on my personal use of the containered [GeMSE_environment](https://github.com/AG-Schumann/GeMSE_environment) to analyze GeMSE samples. Hopefully this readme can give you a introduction to your very own GeMSE analysis.
+This repository is meant to provide documentation on my GeMSE analysis routine - utilizing both the containered [GeMSE_environment](https://github.com/AG-Schumann/GeMSE_environment)
+Diego developed and [Moritz von Sievers' analysis scripts](https://github.com/vonsivers/GeMSE_ROOT_scripts).
 
-Chapters 2 and 3 of this readme  resemble documentation of outdated analysis infrastructures; the aforementioned container solution fully replaced those.
-
-Hier könnte Ihre Werbung stehen.
+Chapters 2 and 3 of this readme resemble documentation of deprecated analysis infrastructures (i.e., the `bcfr102` machine and my Docker container); the aforementioned `singularity` container solution fully replaced those.
 
 <br>
 <br>
 
 ### Contents of this Repository
 
-- `readme.ipynb`: this file
-- ``gemseana.py``: a collection of Python functions (mainly calling [Moritz von Sievers' analysis scripts]())
+- `analysis_input_files`: some files necessary for GeMSE analysis (i.e. calibration, background, isotope data, energy resolution and efficiency simulations)
+- `example_data__cuboid_04_lanza`: exemplary data to to test this workflow yourself
+- `GeMSE_analysis`: [Moritz von Sievers' `GeMSE_analysis` repository](https://github.com/vonsivers/GeMSE_analysis) with the executables compiled in the `GeMSE environment`
+- `GeMSE_ROOT_scripts`: [Moritz von Sievers' `GeMSE_ROOT_scripts` repository](https://github.com/vonsivers/GeMSE_ROOT_scripts) with the executables compiled in the `GeMSE environment`
+- `readme.md`: this readme file
+- `gemseana.py`: collection of GeMSE analysis Python functions (mainly calling the executables from Moritz von Sievers' scripts)
 
 <br>
 <br>
@@ -55,7 +58,9 @@ Make your GeMSE analyses easy by utilizing the `GeMSE_environment` via `singular
 
 `singularity` is, just like `Docker`, a free software to run containerized applications (such as the the `GeMSE_environment`) on top of your local OS - guaranteeing that they will run without any problems.
 
-Listed below you find a step-by-step documentation of my exemplary analysis workflow. I therefore use the APP machine. But in principle the following steps should work exactly the same for any machine running singularity (v3.7.3+).
+Listed below you find a step-by-step documentation of my exemplary analysis workflow.
+I therefore use my APP desktop machine (you can either do this locally or remotely via ssh).
+But in principle the following steps should work exactly the same for any machine running singularity (v3.7.3+).
 
 <br>
 
@@ -65,30 +70,59 @@ The following steps you only have to do once when setting the GeMSE analysis env
 
 - `$ . /usr/local/etc/bash_completion.d/singularity`<br><br>
 
-- Generate and change into the `gemse_analysis` folder within your `home`:<br>`$ mkdir ~/gemse_analysis; cd ~/gemse_analysis`<br>The whole analysis will take place in this directory.<br><br>
+- **Generate Analysis Directory**<br>
+Generate and change into the `gemse_analysis` folder within your `home` directory:<br>
+`$ mkdir ~/gemse_analysis; cd ~/gemse_analysis`<br>
+The whole analysis will take place in this directory.<br><br>
 
-- Build the GeMSE environment singularity image from the Docker container (grab a cup of tea, this takes ~20 min):<br>`$ SINGULARITY_TMPDIR=/scratch/db1086 singularity build ~/gemse_analysis/gemse_env_latest.simg docker://ramirezdiego/gemse_env:latest`<br>This environment will allow easy access to the basic analysis software. Adding `SINGULARITY_TMPDIR=/scratch/db1086` is crucial as the storage allocated to the user's root partition is relatively small and `\tmp` might otherwise not suffice to hold the temporary build data.<br><br>
+- **Building the `GeMSE_environment` Singularity Image**<br>
+Build the `GeMSE_environment` from the Docker container (grab a cup of tea, this takes ~20 min):<br>
+`$ SINGULARITY_TMPDIR=/scratch/db1086 singularity build ~/gemse_analysis/gemse_env_latest.simg docker://ramirezdiego/gemse_env:latest`<br>
+This environment will allow easy access to the basic analysis software.
+Adding `SINGULARITY_TMPDIR=/scratch/db1086` is crucial as the storage allocated to the user's root partition is relatively small and `\tmp` might otherwise not suffice to hold the temporary build data.<br><br>
 
-- Install Moritz von Siever's `GeMSE_ROOT_scripts` and `GeMSE_analysis` repositories, containing the standard analysis scripts:
-  - Clone the repositories:<br>`$ cd ~/gemse_analysis; git clone https://github.com/vonsivers/GeMSE_ROOT_scripts.git`<br>`$ cd ~/gemse_analysis; git clone https://github.com/vonsivers/GeMSE_analysis`<br>
-  - Rename `ifstream` with `std::ifstream` in the following files:
-    - `jfk`
-  - To finally compile the corresponding executables execute:<br>`$ cd ~/gemse_analysis/GeMSE_ROOT_scripts; make clean; make`<br>`$ cd ~/gemse_analysis/GeMSE_analysis; make clean; make`<br><br>
-
-- Clone Daniel's `gemseana` repository (the one including this readme):<br>`$ cd ~/gemse_analysis; git clone https://github.com/DanielBaur/gemseana ~/gemse_analysis/gemse_analysis_documentation`<br>Besides some irrelevant stuff this repository contains my personal analysis scripts. I force myself to explicitly use the analysis code therein so that this repository is more or less up to date; maybe someone can benefit from it.
+- **Clone the `gemseana` Repository**<br>
+Clone this repository into your analysis directory:<br>
+`$ git clone https://github.com/DanielBaur/gemseana ~/gemse_analysis/gemseana`<br>
+I force myself to explicitly use the code therein for all my sample analyses, ensuring that this repository is more or less up to date.
 
 <br>
 
-#### Actual Analysis
+#### Analysis
 
 
-- Obtain the latest GeMSE data, either via `rsync`<br>`$ rsync XXX`<br> or via `scp`<br>`$ scp XXX`<br><br>
+- **Accessing the `GeMSE_environment` Singularity Image**<br>
+Access the just built GeMSE environment singularity imageand mount (bind) your local analysis directory:<br>
+`$ singularity shell ~/gemse_analysis/gemse_env_latest.simg`<br>
+Alternatively you can also mount (i.e., bind) additional directories to the image (here: my `scratch` directory)<br>
+`$ singularity shell --bind /scratch/db1086/gemse_analysis ~/gemse_analysis/gemse_env_latest.simg`<br>
+Per default your local Linux system and the singularity image share your home directory.
+So you always have access to the `~/gemse_analysis` directory you created before.<br><br>
 
-- Access the just built GeMSE environment singularity image and mount (bind) your local analysis directory:<br>`$ singularity shell --bind /scratch/db1086/gemse_analysis /scratch/db1086/gemse_analysis/gemse_env_latest.simg`<br><br>
+- **Optional: Exemplary Data Analysis**<br>
+Hier könnte Ihre Werbung stehen.
 
-- Adapt the `gemse_sample_analysis.py` Python script:<br>`$ vim /scratch/db1086/gemse_analysis/measurements/2021-04-02_cuboid_08_flsls/gemse_sample_analysis`<br>This is the main work that needs to be done. The file should be sufficently commented to be self-explanatory. Alternatively you can also call the functions therin from a Jupyter notebook; I just opted for a Python script so one could easily analyze via ssh.<br><br>
+- **Get GeMSE Data**<br>
+Obtain the latest GeMSE data, either by getting/updating all of the data via `rsync` (more than 100 GB !)<br>
+`$ rsync XXX`<br>
+or grab one specific measurement via `scp` (reccommended, the steps below follow this example)<br>
+`$ scp XXX`<br><br>
 
-- Finally execute the `gemse_sample_analysis.py` Python script:<br>`$ cd /scratch/gemse_analysis`
+- **Specifying Analysis Parameters**<br>
+Adapt the `gemse_sample_analysis.py` Python3 script within the measurement folder:<br>
+`$ vim ~/gemse_analysis/measurements/2021-04-02_cuboid_08_flsls/gemse_sample_analysis`<br>
+This is the main work that needs to be done. The file should be sufficently commented to be self-explanatory. Alternatively you can also call the functions therin from a Jupyter notebook; I just opted for a Python script so one could easily analyze via ssh.<br><br>
+
+- **Run Automatized Analysis**<br>
+Finally execute the `gemse_sample_analysis.py` Python script:<br>
+`$ python3 cd /scratch/gemse_analysis`<br>
+If successful you'll end up with a lot of files in the measurement folder; the important ones being:
+  - `.root`: final energy spectrum (further analysis)
+  - `.json`: detailed analysis outcome (human readable, further analysis)
+  - `.txt`: summarized analysis outcome (ready to be copied into the PTFEsc wiki note)
+From my private laptop I grab those files via `scp`:<br>
+`scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
+
 
 <br>
 
