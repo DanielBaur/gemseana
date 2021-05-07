@@ -31,7 +31,7 @@ Chapters 2 and 3 of this readme resemble documentation of deprecated analysis in
 ### Table of Contents
 
 
-1. **[Local Analysis via Singularity Image](#1.-Local-Analysis-via-Singularity-Image)**<br>
+1. **[Analysis via Singularity Image](#1.-Analysis-via-Singularity-Image)**<br>
 
 
 2. **[Deprecated: Local Analysis via Docker Image](#2.-Deprecated:-Local-Analysis-via-Docker-Image)**<br>
@@ -47,7 +47,7 @@ Chapters 2 and 3 of this readme resemble documentation of deprecated analysis in
 <br>
 
 
-# 1. Local Analysis via Singularity Image
+# 1. Analysis via Singularity Image
 
 (former: The Dumbshit's Guide to GeMSE Analysis)
 
@@ -59,21 +59,25 @@ Make your GeMSE analyses easy by utilizing the `GeMSE_environment` via `singular
 `singularity` is, just like `Docker`, a free software to run containerized applications (such as the the `GeMSE_environment`) on top of your local OS - guaranteeing that they will run without any problems.
 
 Listed below you find a step-by-step documentation of my exemplary analysis workflow.
-I therefore use my APP desktop machine (you can either do this locally or remotely via ssh).
-But in principle the following steps should work exactly the same for any machine running singularity (v3.7.3+).
+- I therefore use my APP desktop machine - logging in locally or remotely via ssh from my private laptop.
+- In principle this should work exactly the same for any machine running `singularity` (v3.7.3+).
+- Obviously the steps listed in `Preparations` you only have to do once. 
+- In the scenario below I'll exemplarily analyze the `cuboid_05_grfln` sample ([ELOG entry 245](http://login.physik.uni-freiburg.de:8284/GeMSE/245)).
 
 <br>
 
 #### Preparations
 
-The following steps you only have to do once when setting the GeMSE analysis environment
 
 - `$ . /usr/local/etc/bash_completion.d/singularity`<br><br>
 
-- **Generate Analysis Directory**<br>
+- **Generating the Analysis Directory**<br>
 Generate and change into the `gemse_analysis` folder within your `home` directory:<br>
 `$ mkdir ~/gemse_analysis; cd ~/gemse_analysis`<br>
-The whole analysis will take place in this directory.<br><br>
+The whole analysis will take place therein.
+Furthermore also create the following directories<br>
+`$ mkdir ~/gemse_analysis/measurements; mkdir ~/gemse_analysis/gemseana`<br>
+These will soon house both this repository and the individual GeMSE measurements you're going to analyze<br>
 
 - **Building the `GeMSE_environment` Singularity Image**<br>
 Build the `GeMSE_environment` from the Docker container (grab a cup of tea, this takes ~20 min):<br>
@@ -81,10 +85,18 @@ Build the `GeMSE_environment` from the Docker container (grab a cup of tea, this
 This environment will allow easy access to the basic analysis software.
 Adding `SINGULARITY_TMPDIR=/scratch/db1086` is crucial as the storage allocated to the user's root partition is relatively small and `\tmp` might otherwise not suffice to hold the temporary build data.<br><br>
 
-- **Clone the `gemseana` Repository**<br>
-Clone this repository into your analysis directory:<br>
+- **Cloning the `gemseana` Repository**<br>
+Now clone this repository into your analysis directory:<br>
 `$ git clone https://github.com/DanielBaur/gemseana ~/gemse_analysis/gemseana`<br>
 I force myself to explicitly use the code therein for all my sample analyses, ensuring that this repository is more or less up to date.
+
+- **Getting GeMSE Data**<br>
+Obtain the latest GeMSE data, either by getting/updating all of the data via `rsync` (NOT recommended, more than 100 GB !)<br>
+`$ rsync XXX`<br>
+or grab one specific measurement via `scp` (reccommended, the steps below follow this example)<br>
+`$ scp -p 1*** g*********@2**.***.***.**:/mnt/d/gemse_measurements/2021_01-18_cuboid_05_grfln ~/gemse_analysis/measurements/2021_01-18_cuboid_05_grfln`<br>
+You'll find the login credentials (i.e., port, login, IP and password) in the [APP wiki](https://wiki.uni-freiburg.de/app/doku.php?id=start:gemse).
+<br><br>
 
 <br>
 
@@ -102,35 +114,25 @@ So you always have access to the `~/gemse_analysis` directory you created before
 - **Optional: Exemplary Data Analysis**<br>
 Hier könnte Ihre Werbung stehen.
 
-- **Get GeMSE Data**<br>
-Obtain the latest GeMSE data, either by getting/updating all of the data via `rsync` (more than 100 GB !)<br>
-`$ rsync XXX`<br>
-or grab one specific measurement via `scp` (reccommended, the steps below follow this example)<br>
-`$ scp XXX`<br><br>
-
 - **Specifying Analysis Parameters**<br>
+The actual analysis is orchestrated by the `gemse_sample_analysis.py` Python3 script, sitting in your measurement folder.
+It's comfortable to use an existing one as a template; for example copy and adapt the one from the `~/gemse_analysis/gemseana/example_data__cuboid_04_lanza/` directory into your measurement folder:<br>
+`$ cp ~/gemse_analysis/gemseana/example_data__cuboid_04_lanza/ ~/gemse_analysis/measurements/`
 Adapt the `gemse_sample_analysis.py` Python3 script within the measurement folder:<br>
 `$ vim ~/gemse_analysis/measurements/2021-04-02_cuboid_08_flsls/gemse_sample_analysis`<br>
 This is the main work that needs to be done. The file should be sufficently commented to be self-explanatory. Alternatively you can also call the functions therin from a Jupyter notebook; I just opted for a Python script so one could easily analyze via ssh.<br><br>
 
-- **Run Automatized Analysis**<br>
+- **Automatized Analysis**<br>
 Finally execute the `gemse_sample_analysis.py` Python script:<br>
 `$ python3 cd /scratch/gemse_analysis`<br>
 If successful you'll end up with a lot of files in the measurement folder; the important ones being:
   - `.root`: final energy spectrum (further analysis)
   - `.json`: detailed analysis outcome (human readable, further analysis)
   - `.txt`: summarized analysis outcome (ready to be copied into the PTFEsc wiki note)
-From my private laptop I grab those files via `scp`:<br>
-`scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
 
+From my private laptop I then grab those files via `scp`:<br>
+`$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
 
-<br>
-
-#### Notes
-
-- Obviously you'll have to adapt the infrastructure denoted above: E.g., replace `db1086` with `pm1620`.<br><br>
-
-- Once you cloned the `gemse_analysis_documentation` repository make sure you also adapt the executable paths within the `gemse_analysis.py` file to match your file structure.
 
 <br>
 <br>
