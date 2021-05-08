@@ -71,32 +71,32 @@ Listed below you find a step-by-step documentation of my exemplary analysis work
 
 - `$ . /usr/local/etc/bash_completion.d/singularity`<br><br>
 
-- **Generating the Analysis Directory**<br>
+- **Generating the Analysis Directories**<br>
 Generate and change into the `gemse_analysis` folder within your `home` directory:<br>
-`$ mkdir ~/gemse_analysis; cd ~/gemse_analysis`<br>
+`$ mkdir ~/gemse_analysis; cd ~/gemse_analysis` .<br>
 The whole analysis will take place therein.
-Furthermore also create the following directories<br>
-`$ mkdir ~/gemse_analysis/measurements; mkdir ~/gemse_analysis/gemseana`<br>
-These will soon house both this repository and the individual GeMSE measurements you're going to analyze<br>
+Furthermore also create the following directories:<br>
+`$ mkdir ~/gemse_analysis/measurements; mkdir ~/gemse_analysis/gemseana` .<br>
+These will soon house both this repository and the individual GeMSE measurements you're going to analyze.<br>
 
 - **Building the `GeMSE_environment` Singularity Image**<br>
 Build the `GeMSE_environment` from the Docker container (grab a cup of tea, this takes ~20 min):<br>
-`$ SINGULARITY_TMPDIR=/scratch/db1086 singularity build ~/gemse_analysis/gemse_env_latest.simg docker://ramirezdiego/gemse_env:latest`<br>
+`$ SINGULARITY_TMPDIR=/scratch/db1086 singularity build ~/gemse_analysis/gemse_env_latest.simg docker://ramirezdiego/gemse_env:latest` .<br>
 This environment will allow easy access to the basic analysis software.
 Adding `SINGULARITY_TMPDIR=/scratch/db1086` is crucial as the storage allocated to the user's root partition is relatively small and `\tmp` might otherwise not suffice to hold the temporary build data.<br><br>
 
 - **Cloning the `gemseana` Repository**<br>
 Now clone this repository into your analysis directory:<br>
-`$ git clone https://github.com/DanielBaur/gemseana ~/gemse_analysis/gemseana`<br>
-I force myself to explicitly use the code therein for all my sample analyses, ensuring that this repository is more or less up to date.
+`$ git clone https://github.com/DanielBaur/gemseana ~/gemse_analysis/gemseana` .<br>
+I force myself to explicitly use the code therein for all my sample analyses, ensuring that this repository is more or less up to date. In order to update to a newer version at a later point simply execute:<br>
+`$ cd ~/gemse_analysis/gemseana; git pull origin master` .<br><br>
 
 - **Getting GeMSE Data**<br>
 Obtain the latest GeMSE data, either by getting/updating all of the data via `rsync` (NOT recommended, more than 100 GB !)<br>
-`$ rsync XXX`<br>
+`$ rsync --numeric-ids -rlvPu -e "ssh -p 1***" g*********@2**.***.***.**:/mnt/d/gemse_measurements/ ~/gemse_analysis/measurements'`<br>
 or grab one specific measurement via `scp` (reccommended, the steps below follow this example)<br>
 `$ scp -p 1*** g*********@2**.***.***.**:/mnt/d/gemse_measurements/2021_01-18_cuboid_05_grfln ~/gemse_analysis/measurements/2021_01-18_cuboid_05_grfln`<br>
-You'll find the login credentials (i.e., port, login, IP and password) in the [APP wiki](https://wiki.uni-freiburg.de/app/doku.php?id=start:gemse).
-<br><br>
+You'll find the login credentials (i.e., port, login, IP and the GeMSE DAQ password) in the [APP wiki](https://wiki.uni-freiburg.de/app/doku.php?id=start:gemse).<br><br>
 
 <br>
 
@@ -112,7 +112,8 @@ Per default your local Linux system and the singularity image share your home di
 So you always have access to the `~/gemse_analysis` directory you created before.<br><br>
 
 - **Optional: Exemplary Data Analysis**<br>
-Hier könnte Ihre Werbung stehen.
+Hier könnte Ihre Werbung stehen.<br>
+`$ python3 ~/gemse_analysis/gemseana/example_data__cuboid_04_lanza/gemse_sample_analysis.py`
 
 - **Specifying Analysis Parameters**<br>
 The actual analysis is orchestrated by the `gemse_sample_analysis.py` Python3 script, sitting in your measurement folder.
