@@ -323,8 +323,9 @@ TF1* getcalibration(TString FileName) {
         return 0;
     }
     TCanvas* c = (TCanvas*) File->Get("c2");
-    TGraphErrors* graph = (TGraphErrors*) c->GetPrimitive("Graph");
-    TF1* fit = (TF1*) graph->GetFunction("fitFunction");
+    //TGraphErrors* graph = (TGraphErrors*) c->GetPrimitive("Graph");// <------------------- comment this OUT for 16k calibration function
+    //TF1* fit = (TF1*) graph->GetFunction("fitFunction");// <------------------- comment this OUT for 16k calibration function
+    TF1* fit = (TF1*) c->GetPrimitive("fitFunction");// <------------------- comment this IN for 16k calibration function
     
     File->Close();
     

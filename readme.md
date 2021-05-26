@@ -134,6 +134,9 @@ If successful you'll end up with a lot of files in the measurement folder; the i
 From my private laptop I then grab those files via `scp`:<br>
 `$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
 
+- **Calibration**<br>
+In the file `src/GeMSE_DetectorConstruction.cc` uncomment the line 1061 (`#include <abspath_sample_geometry_file.cc>`) and enter your own file. 
+
 
 <br>
 <br>
