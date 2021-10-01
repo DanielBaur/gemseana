@@ -141,12 +141,12 @@ In the following I'll document how to generate a suchlike file on the basis of t
 `$ cp ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__zeolite_powder.cc ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__plastic_bags.cc`<br>
 `$ vim ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__plastic_bags.cc`<br>
   - This newly generated sample geometry now needs to be referenced in both the detector construction and the simulation macro:
-    - In the detector construction (`~/gemse_analysis/GeMSE_MC/src/GeMSE_DetectorConstruction.cc`) uncomment the line 1061 (`#include <abspath_sample_geometry_file.cc>`) and enter the abspath toyour own file.<br>
+    - In the detector construction (`~/gemse_analysis/GeMSE_MC/src/GeMSE_DetectorConstruction.cc`) uncomment the line 1021 (`#include <abspath_sample_geometry_file.cc>`) and enter the abspath to your own file. Note that in C++ the `#` is no comment and required to actually include the sample geometry file.<br>
     - In the simulation macro (`~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac`) you need to specify the sample confinement (here `plastic_bags_filling`) in line 28 (`/GeMSE/gun/confine plastic_bags_filling`).
   - Remake the GeMSE_MC and run the efficiency simulation:<br>
 `$ cd ~/gemse_analysis/GeMSE_MC/; make clean; make -j<br>`
 `$ ./bin/Linux-g++/GeMSE_MC -m ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac -o ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/`<br>
- - Add the output files together and delete the constituent files:<br>
+  - Add the output files together and delete the constituent files:<br>
 `$ cd ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/; hadd 20210616__simulated_efficiencies__plastic_bags.root results_run1.root results_run2.root ... results_run31.root; rm ./results_run*`<br>
   - Optional (on apppc37): Check whether the output geometry matches your expecation. Therefore execute the visualization macro:<br>
 `$ cd ~/gemse_analysis/GeMSE_MC/macros/visualization_vrml.mac`<br>

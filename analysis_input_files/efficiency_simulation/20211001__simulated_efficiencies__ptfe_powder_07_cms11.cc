@@ -1,7 +1,7 @@
 
-// last edited: Daniel Baur on 30th August 2021
-// This file contains the GeMSE MC sample geometry for the 'powder_09_dyn62' measurements.
-// Therefore the powder (approximately 10kg) was filled into three plastic trash bags (negligible weight).
+// last edited: Daniel Baur on 01st October 2021
+// This file contains the GeMSE MC sample geometry for the 'powder_07_cms11' measurements.
+// Therefore the powder (approximately 4kg) was filled into three plastic trash bags (negligible weight).
 // For the corresponding efficiency simulations the cavity was assumed to be entirely filled up with the custom "ptfe_powder" material (see: "dimensions").
 // Therefore the "ptfe_powder" material was defined as a composite material (made up of 100% "Teflon", adapted to match the effective density of the powder, see: "materials").
 
@@ -25,7 +25,7 @@ G4SubtractionSolid* WholeCavityFilling = new G4SubtractionSolid("filled_cavity",
 
 // materials
 G4double sample_cavity_vol_cm3 = (xSizeSampleChamber *ySizeSampleChamber *zSizeSampleChamber)/cm3 -(outerRadiusEndcap *outerRadiusEndcap *3.1415 *heightCuHsg_tube_filled)/cm3;
-G4double ptfe_powder_mass_g = 10*1000;
+G4double ptfe_powder_mass_g = 4.039*1000;
 G4Material* ptfe_powder_mat = new G4Material("ptfe_powder", ptfe_powder_mass_g/sample_cavity_vol_cm3 * g / cm3, 1, kStateSolid);
 ptfe_powder_mat->AddMaterial(Teflon, 1.0);
 
