@@ -666,10 +666,6 @@ def display_signal_file_properties(signal_file):
 
 
 
-###############################################################
-### PTFEsc-specific analysis stuff
-###############################################################
-
 
 # This function is used to .
 def gemse_analysis_aftermath(
@@ -902,4 +898,107 @@ def print_analysis_results_nicely(pathstring_analysis_results_json_pathstring):
 
     return
 
+
+# This function is used to generate a sample spectrum plot.
+def gen_sample_spectrum_plot(
+    abspath_root_spectrum,
+    abspath_sample_summary_json,
+    abspath_list_output_spectrum,
+    plot_format_dict = {
+        "ylim" : "",
+        "comments_list" : [],
+        "flag_add_sample_data_comments" : [False,True][1],
+        "flag_add_sample_analysis_comments" : [False,True][1]
+    }):
+
+    # extracting the data from the added spectrum root file
+    added_root_spectrum = uproot.open(abspath_root_spectrum)
+    hist = added_root_spectrum["hist"]
+    bin_edges = hist.axis().edges() # aequidistant engergy bin edges
+    bin_centers = [bin_edges[i] +0.5*(bin_edges[i+1]-bin_edges[i]) for i in range(len(bin_edges)-1)]
+    counts = list(hist.values()) # number of counts per energy bin
+    counts_errors = list(hist.errors()) #
+    
+    # loading the .json file
+    analysis_dictionary = monxeana.get_dict_from_json(input_pathstring_json_file=abspath_sample_summary_json)
+
+    # figure formatting
+    fig, ax1 = plt.subplots(figsize=miscfig.image_format_dict["talk"]["figsize"], dpi=150)
+    #y_lim = [0, 1.1*(max(counts) +max(counts_errors))]
+    if plot_format_dict["xlim"] != "":
+        x_lim = plot_format_dict["xlim"]
+    else:
+        x_lim = [bin_edges[0], bin_edges[-1]]
+    ax1.set_xlim(x_lim)
+    ax1.set_yscale('log')
+    if plot_format_dict["ylim"] != "":
+        ax1.set_ylim(plot_format_dict["ylim"])
+    ax1.yaxis.set_ticklabels([], minor=True)
+    ax1.set_xlabel("energy deposition / $\mathrm{keV}$")
+    binwidth = float(bin_centers[2]-bin_centers[1])
+    ax1.set_ylabel("entries per " +f"${binwidth:.1f}" +r"\,\mathrm{keV}$")
+
+    # plotting the stepized histogram
+    bin_centers, counts, counts_errors_lower, counts_errors_upper, bin_centers_mod, counts_mod = monxeana.stepize_histogram_data(
+        bincenters = bin_centers,
+        counts = counts,
+        counts_errors_lower = counts_errors,
+        counts_errors_upper = counts_errors,
+        flag_addfirstandlaststep = True)
+    plt.plot(
+        bin_centers_mod,
+        counts_mod,
+        linewidth = 0.2,
+        color = "black",
+        linestyle='-',
+        zorder=1,
+        label="jfk")
+    plt.fill_between(
+        bin_centers,
+        counts-counts_errors_lower,
+        counts+counts_errors_upper,
+        color = gemseana.gemse_mint,
+        alpha = 1,
+        zorder = 0,
+        interpolate = True)
+
+    # annotations
+    if plot_format_dict["flag_add_sample_data_comments"] == True:
+        comment_list_sample = [r"\texttt{" +analysis_dictionary['sample_id'].replace("_","\_") +r"} ($" +f"{analysis_dictionary['sample_mass_kg']:.1f}" +r"\,\mathrm{kg},\," +f"{analysis_dictionary['measurement_time_d']:.1f}" +r"\,\mathrm{d}" +"$)"]
+        monxeana.annotate_comments(
+            comment_ax = ax1,
+            comment_list = comment_list_sample,
+            comment_textpos = [0.025, 0.930],
+            comment_textcolor = "black",
+            comment_linesep = 0.1,
+            comment_fontsize = 11)
+        #comment_list_files = [r"   \texttt{" +f.replace("_","\_") +r"}" for i,f in enumerate(input_filenames)]
+    if plot_format_dict["flag_add_sample_analysis_comments"] == True:
+        comment_list_results = [
+            r"$" +conv_isotope_string_to_latex_syntax(key) +r"$: $<" +conv_scifloat_string_to_latex_syntax(format((float(analysis_dictionary['isotope_data'][key]["upper_limit_bq"])/analysis_dictionary["sample_mass_kg"]), ".2e")) +r"\,\mathrm{Bq/kg}$" 
+            if analysis_dictionary['isotope_data'][key]["upper_limit_bq"] != "" 
+            else r"$" +conv_isotope_string_to_latex_syntax(key) +r"$: $(" +f"{match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[0][0]}" +r"^{+" +f"{match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[1][0]}" +r"}" +r"_{-" +f"{match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[2][0]}" +r"})\cdot 10^{" +f"{match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[0][1]}" +"}" +r"\,\mathrm{Bq/kg}$" 
+            for i,key in enumerate(analysis_dictionary['isotope_data'].keys())]
+#mean base: match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[0][0]
+#mean expo: match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[0][1]
+#upper base: match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[1][0]
+#lower base: match_exponents_and_precision_to_mean(analysis_dictionary['isotope_data'][key]['activity_bq_per_kg'], 2, [analysis_dictionary['isotope_data'][key]['activity_bq_upper_per_kg'], analysis_dictionary['isotope_data'][key]['activity_bq_lower_per_kg']])[2][0]
+        monxeana.annotate_comments(
+            comment_ax = ax1,
+            comment_list = comment_list_results,
+            comment_textpos = [0.970, 0.930],
+            comment_textcolor = "black",
+            comment_linesep = 0.083,
+            comment_fontsize = 9)
+    #elif flag_plot == "commented_internal":
+    #    comment_list_sample = [r"\texttt{" +input_sample_id.replace("_","\_") +r"}"]
+    #    comment_list_results = ["yey"]
+
+    # saving the output plot
+    for savestring in abspath_list_output_spectrum:
+        fig.savefig(savestring)
+        plt.show()
+        print(f"saved {savestring}")
+
+    return
 

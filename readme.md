@@ -111,10 +111,6 @@ Alternatively you can also mount (i.e., bind) additional directories to the imag
 Per default your local Linux system and the singularity image share your home directory.
 So you always have access to the `~/gemse_analysis` directory you created before.<br><br>
 
-- **Optional: Exemplary Data Analysis**<br>
-Hier könnte Ihre Werbung stehen.<br>
-`$ python3 ~/gemse_analysis/gemseana/example_data__cuboid_04_lanza/gemse_sample_analysis.py`
-
 - **Specifying Analysis Parameters**<br>
 The actual analysis is orchestrated by the `gemse_sample_analysis.py` Python3 script, sitting in your measurement folder.
 It's comfortable to use an existing one as a template; for example copy and adapt the one from the `~/gemse_analysis/gemseana/example_data__cuboid_04_lanza/` directory into your measurement folder:<br>
@@ -134,8 +130,31 @@ If successful you'll end up with a lot of files in the measurement folder; the i
 From my private laptop I then grab those files via `scp`:<br>
 `$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
 
-- **Calibration**<br>
-In the file `src/GeMSE_DetectorConstruction.cc` uncomment the line 1061 (`#include <abspath_sample_geometry_file.cc>`) and enter your own file. 
+- **Optional: Efficiency Simulation**<br>
+One of the inputs for the automatized analysis is the (sample-specific) efficiency simulation in the form of a `.root` file.
+In the following I'll document how to generate a suchlike file on the basis of the 'plastic_bags' sample.
+  - Access the GeMSE environment singularity shell:<br>
+`$ singularity shell ~/gemse_analysis/gemse_env_latest.simg`<br>
+  - Source stuff:<br>
+`$ cd ~/gemse_analysis/GeMSE_MC; source /opt/GeMSE/setup_sims.sh; make -j`
+  - Now beginning with the actual work: First you need to define the sample geometry. Therefore take and edit one of the template files:<br>
+`$ cp ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__zeolite_powder.cc ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__plastic_bags.cc`<br>
+`$ vim ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__plastic_bags.cc`<br>
+  - This newly generated sample geometry now needs to be referenced in both the detector construction and the simulation macro:
+    - In the detector construction (`~/gemse_analysis/GeMSE_MC/src/GeMSE_DetectorConstruction.cc`) uncomment the line 1061 (`#include <abspath_sample_geometry_file.cc>`) and enter the abspath toyour own file.<br>
+    - In the simulation macro (`~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac`) you need to specify the sample confinement (here `plastic_bags_filling`) in line 28 (`/GeMSE/gun/confine plastic_bags_filling`).
+  - Remake the GeMSE_MC and run the efficiency simulation:<br>
+`$ cd ~/gemse_analysis/GeMSE_MC/; make clean; make -j<br>`
+`$ ./bin/Linux-g++/GeMSE_MC -m ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac -o ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/`<br>
+ - Add the output files together and delete the constituent files:<br>
+`$ cd ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/; hadd 20210616__simulated_efficiencies__plastic_bags.root results_run1.root results_run2.root ... results_run31.root; rm ./results_run*`<br>
+  - Optional (on apppc37): Check whether the output geometry matches your expecation. Therefore execute the visualization macro:<br>
+`$ cd ~/gemse_analysis/GeMSE_MC/macros/visualization_vrml.mac`<br>
+And afterwards double-click onto the newly generated `~/gemse_analysis/GeMSE_MC/g4_00.wrl` file. A GUI depicting the GeMSE cavity will open. With a little bit of zooming and shifting you should be able to see an illustration of your sample geometry.
+
+- **Optional: Exemplary Data Analysis**<br>
+Hier könnte Ihre Werbung stehen.<br>
+`$ python3 ~/gemse_analysis/gemseana/example_data__cuboid_04_lanza/gemse_sample_analysis.py`
 
 
 <br>

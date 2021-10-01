@@ -28,10 +28,15 @@ G4Box* sample_box = new G4Box("sample_box", 0.5*sample_x_cm*cm, 0.5*sample_y_cm*
 
 
 // materials
-G4double zeolite_powder_mass_g = 500;
-G4Material* zeolite_powder_mat = new G4Material("zeolite_powder", zeolite_powder_mass_g/sample_vol_cm3 * g / cm3, 2, kStateSolid);
-zeolite_powder_mat->AddElement(Si, 1);
-zeolite_powder_mat->AddElement(O, 4);
+G4double zeolite_powder_mass_g = 730;
+G4Material* zeolite_powder_mat = new G4Material("zeolite_powder", zeolite_powder_mass_g/sample_vol_cm3 * g / cm3, 5, kStateSolid);
+zeolite_powder_mat->AddElement(H,4);
+G4Element* Na = nist->FindOrBuildElement("Na");
+zeolite_powder_mat->AddElement(Na, 1);
+G4Element* Al = nist->FindOrBuildElement("Al");
+zeolite_powder_mat->AddElement(Al, 1);
+zeolite_powder_mat->AddElement(Si, 2);
+zeolite_powder_mat->AddElement(O, 8);
 
 
 
@@ -57,7 +62,7 @@ zeolite_powder_log->SetVisAttributes(violet);
 // Output sample mass
 const G4double zeolite_powder_mass = zeolite_powder_log->GetMass(false, false) / g;
 G4cout << "\n############################" << G4endl;
-G4cout << "sample mass (PTFE powder): " << zeolite_powder_mass << " g" << G4endl;
+G4cout << "sample mass (zeolite powder): " << zeolite_powder_mass << " g" << G4endl;
 G4cout << "############################" << G4endl;
 
 
