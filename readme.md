@@ -127,7 +127,7 @@ If successful you'll end up with a lot of files in the measurement folder; the i
   - `.json`: detailed analysis outcome (human readable, further analysis)
   - `.txt`: summarized analysis outcome (ready to be copied into the PTFEsc wiki note)<br>
 From my private laptop I then grab those files via `scp`:<br>
-`$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
+`$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`<br>
 
 - **Optional: Efficiency Simulation**<br>
 One of the inputs for the automatized analysis is the (sample-specific) efficiency simulation in the form of a `.root` file.
@@ -140,8 +140,12 @@ In the following I'll document how to generate a suchlike file on the basis of t
 `$ cp ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__zeolite_powder.cc ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__plastic_bags.cc`<br>
 `$ vim ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/sample_geometry__plastic_bags.cc`<br>
   - This newly generated sample geometry now needs to be referenced in both the detector construction and the simulation macro:
-    - In the detector construction (`~/gemse_analysis/GeMSE_MC/src/GeMSE_DetectorConstruction.cc`) uncomment the line 1021 (`#include <abspath_sample_geometry_file.cc>`) and enter the abspath to your own file. Note that in C++ the `#` is no comment and required to actually include the sample geometry file.<br>
-    - In the simulation macro (`~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac`) you need to specify the sample confinement (here `plastic_bags_filling`) in line 28 (`/GeMSE/gun/confine plastic_bags_filling`).
+    - In the detector construction (`~/gemse_analysis/GeMSE_MC/src/GeMSE_DetectorConstruction.cc`):
+      - Uncomment the line 1021 (`#include <abspath_sample_geometry_file.cc>`) and enter the abspath to your own file. Note that in C++ the `#` is no comment and required to actually include the sample geometry file.<br>
+      - In line 137 (`G4double d_LiContact = 0.094 * cm;`) eventually adapt the dead layer thickness. The old value was 0.67mm. But it was expected to increase during the power outage on 31st July. Diego determined the new value to be 0.94 mm (see 2022 GeMSE paper).
+    - In the simulation macro (`~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac`):
+      - Specify the sample confinement (here `plastic_bags_filling`) in line 28 (`/GeMSE/gun/confine plastic_bags_filling`).
+      - For very small sample geometries adapt line 25 (`/GeMSE/gun/radius 34. cm`). This defines the volume in which geantinos are randomly spawned. A very small overlap between the gun an sample volumes results in very long simulation times. The default value is 34 cm.
   - Remake the GeMSE_MC and run the efficiency simulation:<br>
 `$ cd ~/gemse_analysis/GeMSE_MC/; make clean; make -j<br>`
 `$ ./bin/Linux-g++/GeMSE_MC -m ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac -o ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/`<br>
