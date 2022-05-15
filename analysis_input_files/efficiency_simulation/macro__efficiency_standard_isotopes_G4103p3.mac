@@ -22,10 +22,10 @@
 # Confinement
 /GeMSE/gun/type Volume
 /GeMSE/gun/shape Cylinder
-/GeMSE/gun/radius 2. cm
+/GeMSE/gun/radius 34. cm
 /GeMSE/gun/halfz 18. cm
 /GeMSE/gun/center 0 0 7.94 cm
-/GeMSE/gun/confine sample_placement
+/GeMSE/gun/confine Teflon_LeftBrick Teflon_RightBrick Teflon_BackBrick Teflon_FrontBrick
 
 /GeMSE/gun/angtype iso
 

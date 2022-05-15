@@ -147,7 +147,7 @@ In the following I'll document how to generate a suchlike file on the basis of t
       - Specify the sample confinement (here `plastic_bags_filling`) in line 28 (`/GeMSE/gun/confine plastic_bags_filling`).
       - For very small sample geometries adapt line 25 (`/GeMSE/gun/radius 34. cm`). This defines the volume in which geantinos are randomly spawned. A very small overlap between the gun an sample volumes results in very long simulation times. The default value is 34 cm.
   - Remake the GeMSE_MC and run the efficiency simulation:<br>
-`$ cd ~/gemse_analysis/GeMSE_MC/; make clean; make -j<br>`
+`$ cd ~/gemse_analysis/GeMSE_MC/; make clean; make -j`<br>
 `$ ./bin/Linux-g++/GeMSE_MC -m ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/macro__efficiency_standard_isotopes_G4103p3.mac -o ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/`<br>
   - Add the output files together and delete the constituent files:<br>
 `$ cd ~/gemse_analysis/gemseana/analysis_input_files/efficiency_simulation/; hadd 20210616__simulated_efficiencies__plastic_bags.root results_run1.root results_run2.root ... results_run31.root; rm ./results_run*`<br>
