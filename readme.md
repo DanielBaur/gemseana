@@ -126,7 +126,6 @@ If successful you'll end up with a lot of files in the measurement folder; the i
   - `.root`: final energy spectrum (further analysis)
   - `.json`: detailed analysis outcome (human readable, further analysis)
   - `.txt`: summarized analysis outcome (ready to be copied into the PTFEsc wiki note)
-
 From my private laptop I then grab those files via `scp`:<br>
 `$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
 
