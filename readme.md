@@ -125,7 +125,7 @@ Finally execute the `gemse_sample_analysis.py` Python script:<br>
 If successful you'll end up with a lot of files in the measurement folder; the important ones being:
   - `.root`: final energy spectrum (further analysis)
   - `.json`: detailed analysis outcome (human readable, further analysis)
-  - `.txt`: summarized analysis outcome (ready to be copied into the PTFEsc wiki note)
+  - `.txt`: summarized analysis outcome (ready to be copied into the PTFEsc wiki note)<br>
 From my private laptop I then grab those files via `scp`:<br>
 `$ scp db1086@:~/gemse_analysis/measurements/XXX ~/Desktop/arbeitsstuff/ptfesc/data/gemse/XXX`
 
